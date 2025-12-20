@@ -1,0 +1,89 @@
+name: Backend CI test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**.go'
+      - 'services/wallets/go.mod'
+      - 'services/wallets/go.sum'
+      - 'services/users/go.mod'
+      - 'services/users/go.sum'
+      - 'go.mod'
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4.2.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5.0.2
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Install swag
+        run: go install github.com/swaggo/swag/cmd/swag@latest
+
+      - name: Generate Swagger docs for wallet service
+        run: |
+          cd services/wallets
+          swag init
+      
+      - name: Generate Swagger docs for user service
+        run: |
+          cd services/users
+          swag init
+
+      - name: Setup gotestsum
+        run: |
+          gotestsum_version=1.12.0
+
+          OS=$(go env GOOS)
+          ARCH=$(go env GOARCH)
+
+          export TARGET_FILE=gotestsum_${gotestsum_version}_${OS}_${ARCH}.tar.gz
+          temp_path="/tmp/${TARGET_FILE}"
+          url=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_version}/gotestsum_${gotestsum_version}_${OS}_${ARCH}.tar.gz
+          [ -e ${temp_path} ] || curl -sLf --retry 3 -o ${temp_path} ${url}
+
+          mkdir -p /tmp/gotestsum-${gotestsum_version}
+          tar -xvzf ${temp_path} -C /tmp/gotestsum-${gotestsum_version}
+          cp /tmp/gotestsum-${gotestsum_version}/gotestsum /usr/local/bin/gotestsum
+          chmod +x /usr/local/bin/gotestsum
+          gotestsum --version
+
+      - name: Run tests
+        run: make test-ci
+
+      - name: create report
+        uses: k1LoW/octocov-action@v1

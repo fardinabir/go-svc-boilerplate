@@ -1,0 +1,1 @@
+-- This file contains essential seed data for the new tables

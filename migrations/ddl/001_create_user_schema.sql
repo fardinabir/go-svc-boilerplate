@@ -1,0 +1,1 @@
+-- This file contains the ddl to create new tables
