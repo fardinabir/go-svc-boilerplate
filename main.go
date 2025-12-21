@@ -1,7 +1,8 @@
 package main
 
 import (
-    "github.com/fardinabir/go-svc-boilerplate/cmd"
+	"github.com/fardinabir/go-svc-boilerplate/cmd"
+	_ "github.com/fardinabir/go-svc-boilerplate/docs"
 )
 
 // @title         Users Service API

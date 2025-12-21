@@ -32,9 +32,9 @@ migrate-test:
 
 .PHONY: reset-db
 reset-db:
-    PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "DROP DATABASE IF EXISTS user;"
-    PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE user WITH TEMPLATE = template0 OWNER = postgres ENCODING = 'UTF8';"
-    make migrate
+	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "DROP DATABASE IF EXISTS user;"
+	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE user WITH TEMPLATE = template0 OWNER = postgres ENCODING = 'UTF8';"
+	make migrate
 
 .PHONY: reset-test-db
 reset-test-db:
@@ -54,7 +54,7 @@ stop:
 clear:
 	docker-compose down -v
 
-.PHONY: serve-backend
+.PHONY: serve
 serve:
 	go run main.go server --config config.yaml
 
@@ -82,8 +82,8 @@ SWAG_GO_FILES:=$(shell find internal/controller -type f -name '*.go' -print)
 docs/swagger.yaml: main.go $(SWAG_GO_FILES)
 	swag init
 
-docs/swagger.html: docs
+docs/swagger.html: docs/swagger.yaml
 	npx @redocly/cli@1.25.3 build-docs -o docs/swagger.html docs/swagger.yaml
 
 .PHONY: swagger
-swagger: docs
+swagger: docs/swagger.html
