@@ -15,8 +15,7 @@ jobs:
       - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2.8.0
         with:
-          # Build and run golangci-lint with Go 1.25 to match go.mod
-          go_version: "1.25"
-          # Let the action install the latest golangci-lint (compiled with a recent Go)
-          # to avoid version mismatches with the targeted Go version.
+          go_version_file: go.mod
+          golangci_lint_version: v1.64.2
+          fail_on_error: true
           fail_level: error
