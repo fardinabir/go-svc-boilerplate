@@ -1,7 +1,7 @@
 COMMON_PACKAGE=github.com/fardinabir/go-svc-boilerplate/internal/common
 CURRENT_DIR=$(shell pwd)
 DIST_DIR=${CURRENT_DIR}/dist
-CLI_NAME=wallet-cli
+CLI_NAME=user-cli
 
 HOST_OS:=$(shell go env GOOS)
 HOST_ARCH:=$(shell go env GOARCH)

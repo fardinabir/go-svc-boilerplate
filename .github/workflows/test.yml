@@ -7,11 +7,8 @@ on:
     branches: [ "main" ]
     paths:
       - '**.go'
-      - 'services/wallets/go.mod'
-      - 'services/wallets/go.sum'
-      - 'services/users/go.mod'
-      - 'services/users/go.sum'
       - 'go.mod'
+      - 'go.sum'
 
 jobs:
 
@@ -53,15 +50,8 @@ jobs:
 
       - name: Install swag
         run: go install github.com/swaggo/swag/cmd/swag@latest
-
-      - name: Generate Swagger docs for wallet service
-        run: |
-          cd services/wallets
-          swag init
-      
       - name: Generate Swagger docs for user service
         run: |
-          cd services/users
           swag init
 
       - name: Setup gotestsum

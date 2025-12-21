@@ -44,7 +44,7 @@ func NewAPI(opts TxnAPIServerOpts) (Server, error) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
-	s := &txnAPIServer{
+	s := &userAPIServer{
 		port:   opts.ListenPort,
 		engine: engine,
 		log:    logger,
@@ -63,7 +63,7 @@ func NewAPI(opts TxnAPIServerOpts) (Server, error) {
 //	Repository ====> Service =====> Controller
 //
 // It follows the CSR dependency injection pattern
-func (s *txnAPIServer) initUserController() controller.UserHandler {
+func (s *userAPIServer) initUserController() controller.UserHandler {
 
 	// Initialize dependencies (Repository -> Service -> Controller)
 	userRepo := repository.NewUserRepository(s.db)
@@ -74,7 +74,7 @@ func (s *txnAPIServer) initUserController() controller.UserHandler {
 }
 
 // setupRoutes registers the routes for the application.
-func (s *txnAPIServer) setupRoutes(e *echo.Echo) {
+func (s *userAPIServer) setupRoutes(e *echo.Echo) {
 	e.Validator = controller.NewCustomValidator()
 
 	api := e.Group("/api/v1")

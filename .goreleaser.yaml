@@ -1,6 +1,6 @@
 version: 2
 
-project_name: wallet
+project_name: user
 
 before:
   hooks:
@@ -10,8 +10,8 @@ before:
     - go fmt
 
 builds:
-  - id: wallet-cli
-    binary: wallet-{{ .Os }}-{{ .Arch }}
+  - id: user-cli
+    binary: user-{{ .Os }}-{{ .Arch }}
     flags:
       - -v
     ldflags:
@@ -26,9 +26,9 @@ builds:
       - arm64
 
 archives:
-  - id: wallet-archive
+  - id: user-archive
     builds:
-    - wallet-cli
+    - user-cli
     name_template: |-
       {{ .ProjectName }}-{{ .Os }}-{{ .Arch }}
     format: binary

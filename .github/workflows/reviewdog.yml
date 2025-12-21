@@ -7,19 +7,14 @@ jobs:
   golangci-lint:
     name: runner / golangci-lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [wallets, Users]
     steps:
       - uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 0
 
-      - name: golangci-lint for ${{ matrix.service }}
+      - name: golangci-lint
         uses: reviewdog/action-golangci-lint@v2.6.2
         with:
-          go_version_file: services/${{ matrix.service }}/go.mod
-          golangci_lint_version: v1.64.2
+          go_version_file: go.mod
+          golangci_lint_version: v1.61.0
           fail_on_error: true
-          workdir: ./services/${{ matrix.service }}
-
