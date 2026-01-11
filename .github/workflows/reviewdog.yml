@@ -16,6 +16,6 @@ jobs:
         uses: reviewdog/action-golangci-lint@v2.8.0
         with:
           go_version_file: go.mod
-          golangci_lint_version: v1.64.2
+          golangci_lint_version: v2.8.0
           fail_on_error: true
           fail_level: error
