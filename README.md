@@ -1,4 +1,4 @@
-# Go Service Boilerplate
+<h1 align="center">Go Service Boilerplate</h1>
 
 <p align="center">
   <img src="https://github.com/fardinabir/go-svc-boilerplate/actions/workflows/test.yml/badge.svg" alt="Test">
@@ -13,13 +13,13 @@ Clean, testable Go service built with Echo for HTTP and GORM for persistence, fo
 ## Why This Boilerplate Wins
 
 
-- Strict ideomatic layered architecture with interfaces and DI for testability.
-- Ready CI pipeline with gotestsum and GitHub Actions.
-- Developer-friendly Makefile: start, migrate, serve, test, docs.
-- Built-in validation with custom tags and consistent error mapping.
+- 🧩 Strict idiomatic layered architecture with interfaces and DI for testability.
+- 🤖 Ready CI pipeline with gotestsum and GitHub Actions.
+- 🛠️ Developer-friendly Makefile: start, migrate, serve, test, docs.
+- ✅ Built-in validation with custom tags and consistent error mapping.
 
-- Docker Compose local stack with Postgres and migrations.
-- Ready API docs hosting setup with Swagger UI.
+- 🐳 Docker Compose local stack with Postgres and migrations.
+- 📘 Ready API docs hosting setup with Swagger UI.
 
 
 ## Layered Architecture (Go Practices)
