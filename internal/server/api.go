@@ -2,18 +2,17 @@
 package server
 
 import (
-    "fmt"
+	"fmt"
 
-    controller2 "github.com/fardinabir/go-svc-boilerplate/internal/controller"
-    "github.com/fardinabir/go-svc-boilerplate/internal/db"
-    "github.com/fardinabir/go-svc-boilerplate/internal/model"
-    "github.com/fardinabir/go-svc-boilerplate/internal/repository"
-    "github.com/fardinabir/go-svc-boilerplate/internal/service"
-    "github.com/fardinabir/go-svc-boilerplate/internal/utils"
-    "github.com/labstack/echo/v4"
-    "github.com/labstack/echo/v4/middleware"
-
-    log "github.com/sirupsen/logrus"
+	"github.com/fardinabir/go-svc-boilerplate/internal/controller"
+	"github.com/fardinabir/go-svc-boilerplate/internal/db"
+	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/repository"
+	"github.com/fardinabir/go-svc-boilerplate/internal/service"
+	"github.com/fardinabir/go-svc-boilerplate/internal/utils"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 // TxnAPIServerOpts is the options for the TxnAPIServer
@@ -44,7 +43,7 @@ func NewAPI(opts TxnAPIServerOpts) (Server, error) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
-	s := &txnAPIServer{
+	s := &userAPIServer{
 		port:   opts.ListenPort,
 		engine: engine,
 		log:    logger,
@@ -63,27 +62,26 @@ func NewAPI(opts TxnAPIServerOpts) (Server, error) {
 //	Repository ====> Service =====> Controller
 //
 // It follows the CSR dependency injection pattern
-func (s *txnAPIServer) initUserController() controller2.UserHandler {
-
+func (s *userAPIServer) initUserController() controller.UserHandler {
 	// Initialize dependencies (Repository -> Service -> Controller)
 	userRepo := repository.NewUserRepository(s.db)
 	userService := service.NewUserService(userRepo)
-	userController := controller2.NewUserHandler(userService)
+	userController := controller.NewUserHandler(userService)
 
 	return userController
 }
 
 // setupRoutes registers the routes for the application.
-func (s *txnAPIServer) setupRoutes(e *echo.Echo) {
-	e.Validator = controller2.NewCustomValidator()
+func (s *userAPIServer) setupRoutes(e *echo.Echo) {
+	e.Validator = controller.NewCustomValidator()
 
 	api := e.Group("/api/v1")
 
 	// Health check
-	healthHandler := controller2.NewHealth()
+	healthHandler := controller.NewHealth()
 	api.GET("/health", healthHandler.Health)
 
 	userHandler := s.initUserController()
 
-	controller2.InitRoutes(api, userHandler)
+	controller.InitRoutes(api, userHandler)
 }

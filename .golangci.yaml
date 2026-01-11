@@ -1,32 +1,47 @@
-linters:
-  enable:
-    - errcheck
-    - gofmt
-    - govet
-    - staticcheck
-    - typecheck
-    - unused
+version: "2"
 
-  enable-all: false
-  disable-all: true
-  fast: false
+linters:
+  default: none
+  enable:
+    # - bodyclose
+    # - dupl
+    - errcheck
+    # - gocritic
+    # - gocyclo
+    # - gosec
+    - govet
+    # - ineffassign
+    # - misspell
+    # - prealloc
+    # - revive
+    - staticcheck
+    # - testifylint
+    # - unconvert
+    # - unused
+    # - usestdlibvars
+    # - errcheck
+    # - govet
+    # - staticcheck
+    - unused
+  exclusions:
+    paths:
+      - docs
+
+formatters:
+  enable:
+    - gci
+    - gofumpt
+    - gofmt
 
 issues:
-  include:
-    - EXC0012
-    - EXC0013
-    - EXC0014
-    - EXC0015
   exclude-rules:
     - path: _test.go
       linters:
         - dupl
-  exclude-dirs:
-    - docs
   max-issues-per-linter: 0
   max-same-issues: 0
 
 run:
-  timeout: 5m
+  go: "1.25"
   build-tags:
     - integration

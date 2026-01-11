@@ -10,6 +10,17 @@
 
 Clean, testable Go service built with Echo for HTTP and GORM for persistence, following a strict layered design (Controller → Service → Repository) with interfaces at boundaries and dependency injection at the composition root. It includes custom request validation, structured logging, configuration via Viper, optional Swagger documentation, and database migrations. Local development uses Docker Compose for Postgres, and tests run against a managed test database (also exercised in CI). The example domain is a simple User CRUD to keep the focus on structure.
 
+## Why This Boilerplate Wins
+
+
+- Strict ideomatic layered architecture with interfaces and DI for testability.
+- Ready CI pipeline with gotestsum and GitHub Actions.
+- Developer-friendly Makefile: start, migrate, serve, test, docs.
+- Built-in validation with custom tags and consistent error mapping.
+
+- Docker Compose local stack with Postgres and migrations.
+- Ready API docs hosting setup with Swagger UI.
+
 
 ## Layered Architecture (Go Practices)
 
@@ -86,30 +97,6 @@ sequenceDiagram
   Service-->>Controller: Result (DTO/status)
 ```
 
-## Repository Pattern
-
-- Abstracts persistence behind an interface with a GORM-backed implementation.
-- Isolates ORM specifics from business logic and simplifies testing.
-- Enables dependency inversion by having services depend on repository interfaces.
-
-## Dependency Injection & Inversion
-
-- Dependencies are composed in the server layer, wiring concrete implementations behind interfaces.
-- Dependency Inversion: services depend on `UserRepository` (interface) rather than GORM directly.
-- Dependency Injection: concrete repository is injected into the service; service into the controller.
-- Result: testable, replaceable units with minimal coupling.
-
-For full details, see `docs/architecture.md`.
-
-## Testing & CI (TDD-friendly)
-
-- Test scopes:
-  - Controller tests (`internal/controller/*_test.go`) exercise request binding/validation and handler behavior against a real DB.
-  - Server tests verify route registration and middleware wiring.
-- Test DB provisioning:
-  - `internal/db.NewTestDB()` connects to the default `postgres` DB, auto-creates `user_test` if missing, then runs migrations.
-- CI:
-  - GitHub Actions workflow (`.github/workflows/test.yml`) runs `go test ./...` on PRs/commits, catching regressions early.
 
 ## Running Locally
 
@@ -121,8 +108,9 @@ For full details, see `docs/architecture.md`.
    - `make start`
 4. Apply database migrations:
    - `make migrate`
-5. Serve the API:
-   - `make serve`
+5. Access the APIs:
+   - Access backend health: `http://localhost:8082/api/v1/health`
+   - Access Swagger UI for more details: `http://localhost:1314/swagger/index.html`
 6. Stop or clear containers:
    - `make stop` or `make clear`
 7. Configuration: see `config.yaml` (runtime) and `config.test.yaml` (tests).
@@ -138,14 +126,45 @@ For full details, see `docs/architecture.md`.
   - Test DB: `make reset-test-db`
 - Extend by adding new SQL files and models; keep schema changes additive and versioned.
 
-## Validation & Swagger
+## Used Practice and Patterns
+
+This section summarizes the core engineering practices and design patterns used across the service.
+
+### Repository Pattern
+
+- Abstracts persistence behind an interface with a GORM-backed implementation.
+- Isolates ORM specifics from business logic and simplifies testing.
+- Enables dependency inversion by having services depend on repository interfaces.
+
+### Dependency Injection & Inversion
+
+- Dependencies are composed in the server layer, wiring concrete implementations behind interfaces.
+- Dependency Inversion: services depend on `UserRepository` (interface) rather than GORM directly.
+- Dependency Injection: concrete repository is injected into the service; service into the controller.
+- Result: testable, replaceable units with minimal coupling.
+
+
+### Testing & CI (TDD-friendly)
+
+- Test scopes:
+  - Controller tests (`internal/controller/*_test.go`) exercise request binding/validation and handler behavior against a real DB.
+  - Server tests verify route registration and middleware wiring.
+- Test DB provisioning:
+  - `internal/db.NewTestDB()` connects to the default `postgres` DB, auto-creates `user_test` if missing, then runs migrations.
+- CI:
+  - GitHub Actions workflow (`.github/workflows/test.yml`) runs `go test ./...` on PRs/commits, catching regressions early.
+
+
+### Validation & Integrated API Documentation (Swagger)
 
 - Validation: Echo validator with custom tags registered in `internal/controller/validator.go`.
-- Swagger (optional):
-  - Generate OpenAPI and Redoc docs: `make swagger`
-  - Server can be enabled via config; docs import is intentionally omitted until generated.
+- Swagger:
+  - Swagger Server can be enabled via config; docs import is intentionally omitted until generated.
+  - Base setup for Swagger UI hosting is included out of the box.
+  - Access the hosted Swagger UI at `http://localhost:1314/swagger/index.html`.
+  - Use `make swagger` to regenerate the spec and HTML when endpoints change.
 
-## Logging
+### Logging
 
 - Structured request logging via Echo middleware (`internal/server/log.go`).
 - Global logger initialization in `internal/utils/logger.go`.

@@ -1,12 +1,12 @@
 package server
 
 import (
-    "context"
-    "fmt"
+	"context"
+	"fmt"
 
-    log "github.com/sirupsen/logrus"
-    "github.com/labstack/echo/v4"
-    echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 // swaggerServer is the API server for Txn

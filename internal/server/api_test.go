@@ -1,14 +1,14 @@
 package server
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/fardinabir/go-svc-boilerplate/internal/model"
-    "github.com/labstack/echo/v4"
-    log "github.com/sirupsen/logrus"
-    "github.com/stretchr/testify/assert"
-    "github.com/stretchr/testify/require"
-    "gorm.io/gorm"
+	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 func TestNewAPI(t *testing.T) {
@@ -27,7 +27,7 @@ func TestNewAPI(t *testing.T) {
 						Port:     5432,
 						User:     "postgres",
 						Password: "postgres",
-                        DBName:   "postgres",
+						DBName:   "postgres",
 						SSLMode:  "disable",
 					},
 					SwaggerServer: model.Server{
@@ -70,10 +70,10 @@ func TestNewAPI(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				assert.NotNil(t, server)
-				assert.Equal(t, tt.opts.ListenPort, server.(*txnAPIServer).port)
-				assert.IsType(t, &echo.Echo{}, server.(*txnAPIServer).engine)
-				assert.IsType(t, &log.Entry{}, server.(*txnAPIServer).log)
-				assert.IsType(t, &gorm.DB{}, server.(*txnAPIServer).db)
+				assert.Equal(t, tt.opts.ListenPort, server.(*userAPIServer).port)
+				assert.IsType(t, &echo.Echo{}, server.(*userAPIServer).engine)
+				assert.IsType(t, &log.Entry{}, server.(*userAPIServer).log)
+				assert.IsType(t, &gorm.DB{}, server.(*userAPIServer).db)
 			}
 		})
 	}

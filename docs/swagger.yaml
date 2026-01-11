@@ -1,0 +1,166 @@
+basePath: /api/v1
+definitions:
+  controller.Error:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  controller.ResponseData:
+    properties:
+      data:
+        description: Data is the response data.
+    type: object
+  controller.ResponseError:
+    properties:
+      errors:
+        description: Errors is the response errors.
+        items:
+          $ref: '#/definitions/controller.Error'
+        type: array
+    type: object
+  controller.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  model.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact: {}
+  description: User CRUD API for user-management service.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Users Service API
+  version: v1.0
+paths:
+  /health:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controller.ResponseData'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Health check
+      tags:
+      - health
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controller.ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.User'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User create request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/controller.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+      summary: Create a user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controller.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+      summary: Get user by ID
+      tags:
+      - users
+schemes:
+- http
+swagger: "2.0"

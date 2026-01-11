@@ -1,9 +1,9 @@
 package server
 
 import (
-    "github.com/labstack/echo/v4"
-    "github.com/labstack/echo/v4/middleware"
-    log "github.com/sirupsen/logrus"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	log "github.com/sirupsen/logrus"
 )
 
 func writeRequestLogJSON(_ echo.Context, v middleware.RequestLoggerValues) error {

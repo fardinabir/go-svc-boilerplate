@@ -1,14 +1,14 @@
 package cmd
 
 import (
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 
-    "github.com/fardinabir/go-svc-boilerplate/internal/model"
-    "github.com/go-playground/validator/v10"
-    log "github.com/sirupsen/logrus"
-    "github.com/spf13/cobra"
-    "github.com/spf13/viper"
+	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/go-playground/validator/v10"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "digital-wallet-demonstration",
+	Use:   "digital-user-demonstration",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:

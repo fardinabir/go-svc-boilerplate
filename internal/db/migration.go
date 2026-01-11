@@ -1,15 +1,15 @@
 package db
 
 import (
-    "fmt"
-    "io/fs"
-    "os"
-    "path/filepath"
-    "sort"
-    "strings"
+	"fmt"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
 
-    "github.com/fardinabir/go-svc-boilerplate/internal/model"
-    "gorm.io/gorm"
+	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"gorm.io/gorm"
 )
 
 // Migrate runs the complete migration process for the database
