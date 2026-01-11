@@ -12,7 +12,6 @@ import (
 	"github.com/fardinabir/go-svc-boilerplate/internal/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -64,7 +63,6 @@ func NewAPI(opts TxnAPIServerOpts) (Server, error) {
 //
 // It follows the CSR dependency injection pattern
 func (s *userAPIServer) initUserController() controller.UserHandler {
-
 	// Initialize dependencies (Repository -> Service -> Controller)
 	userRepo := repository.NewUserRepository(s.db)
 	userService := service.NewUserService(userRepo)

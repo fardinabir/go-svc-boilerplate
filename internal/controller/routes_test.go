@@ -1,17 +1,17 @@
 package controller
 
 import (
-    "net/http"
-    "net/http/httptest"
-    "testing"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 
-    db2 "github.com/fardinabir/go-svc-boilerplate/internal/db"
-    "github.com/fardinabir/go-svc-boilerplate/internal/repository"
-    "github.com/fardinabir/go-svc-boilerplate/internal/service"
-    "github.com/labstack/echo/v4"
-    "github.com/stretchr/testify/assert"
-    "github.com/stretchr/testify/require"
-    "gorm.io/gorm"
+	db2 "github.com/fardinabir/go-svc-boilerplate/internal/db"
+	"github.com/fardinabir/go-svc-boilerplate/internal/repository"
+	"github.com/fardinabir/go-svc-boilerplate/internal/service"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 func TestRegister(t *testing.T) {
@@ -31,8 +31,8 @@ func TestRegister(t *testing.T) {
 		expectedCode int
 	}{
 		{"Health_Check", http.MethodGet, "/api/v1/health", http.StatusOK},
-        {"Create_User_without_body", http.MethodPost, "/api/v1/users", http.StatusBadRequest},          // Assuming no body is sent, should return BadRequest
-        {"List_users_empty", http.MethodGet, "/api/v1/users", http.StatusOK},                            // Should return empty array
+		{"Create_User_without_body", http.MethodPost, "/api/v1/users", http.StatusBadRequest}, // Assuming no body is sent, should return BadRequest
+		{"List_users_empty", http.MethodGet, "/api/v1/users", http.StatusOK},                  // Should return empty array
 	}
 
 	for _, tt := range tests {

@@ -31,7 +31,7 @@ func IsValidUserName(fl validator.FieldLevel) bool {
 		return false
 	}
 	for _, r := range trimmed {
-		if !(unicode.IsLetter(r) || unicode.IsSpace(r) || r == '-' || r == '\'') {
+		if !unicode.IsLetter(r) && !unicode.IsSpace(r) && r != '-' && r != '\'' {
 			return false
 		}
 	}

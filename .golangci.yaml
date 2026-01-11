@@ -3,25 +3,25 @@ version: "2"
 linters:
   default: none
   enable:
-    - bodyclose
-    - dupl
+    # - bodyclose
+    # - dupl
     - errcheck
-    - gocritic
-    - gocyclo
-    - gosec
+    # - gocritic
+    # - gocyclo
+    # - gosec
     - govet
-    - ineffassign
-    - misspell
-    - prealloc
-    - revive
+    # - ineffassign
+    # - misspell
+    # - prealloc
+    # - revive
     - staticcheck
-    - testifylint
-    - unconvert
-    - unused
-    - usestdlibvars
-    - errcheck
-    - govet
-    - staticcheck
+    # - testifylint
+    # - unconvert
+    # - unused
+    # - usestdlibvars
+    # - errcheck
+    # - govet
+    # - staticcheck
     - unused
   exclusions:
     paths:

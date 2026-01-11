@@ -2,12 +2,12 @@
 package db
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/fardinabir/go-svc-boilerplate/internal/model"
-    "github.com/spf13/viper"
-    "gorm.io/driver/postgres"
-    "gorm.io/gorm"
+	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // New creates a new database connection
@@ -28,10 +28,10 @@ func New(cfg model.PostgreSQL) (*gorm.DB, error) {
 
 // NewTestDB creates a new test database connection
 func NewTestDB() (*gorm.DB, error) {
-    cfg, err := initTestConfig()
-    if err != nil {
-        return nil, fmt.Errorf("failed to initialize test config: %w", err)
-    }
+	cfg, err := initTestConfig()
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize test config: %w", err)
+	}
 
 	// Connect to test database
 	db, err := New(cfg.PostgreSQL)

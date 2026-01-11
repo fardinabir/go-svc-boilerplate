@@ -1,10 +1,10 @@
 package server
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/labstack/echo/v4"
-    "github.com/stretchr/testify/assert"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewSwagger(t *testing.T) {
