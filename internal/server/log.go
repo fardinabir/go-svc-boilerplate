@@ -16,7 +16,7 @@ func writeRequestLogJSON(_ echo.Context, v middleware.RequestLoggerValues) error
 		"protocol":       v.Protocol,
 		"status":         v.Status,
 		"latency":        v.Latency,
-		"content_length": v.ContentLength, // ContentLengthの型はstringで、GETの場合は空文字列
+		"content_length": v.ContentLength,
 		"response_size":  v.ResponseSize,
 	}).Info("finished")
 	return nil
