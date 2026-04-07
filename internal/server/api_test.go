@@ -14,12 +14,12 @@ import (
 func TestNewAPI(t *testing.T) {
 	tests := []struct {
 		name    string
-		opts    TxnAPIServerOpts
+		opts    APIServerOpts
 		wantErr bool
 	}{
 		{
 			name: "Valid configuration",
-			opts: TxnAPIServerOpts{
+			opts: APIServerOpts{
 				ListenPort: 8082,
 				Config: model.Config{
 					PostgreSQL: model.PostgreSQL{
@@ -40,7 +40,7 @@ func TestNewAPI(t *testing.T) {
 		},
 		{
 			name: "Invalid database configuration",
-			opts: TxnAPIServerOpts{
+			opts: APIServerOpts{
 				ListenPort: 8082,
 				Config: model.Config{
 					PostgreSQL: model.PostgreSQL{

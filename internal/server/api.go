@@ -15,14 +15,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// TxnAPIServerOpts is the options for the TxnAPIServer
-type TxnAPIServerOpts struct {
+// APIServerOpts is the options for the TxnAPIServer
+type APIServerOpts struct {
 	ListenPort int
 	Config     model.Config
 }
 
 // NewAPI returns a new instance of the Txn API server
-func NewAPI(opts TxnAPIServerOpts) (Server, error) {
+func NewAPI(opts APIServerOpts) (Server, error) {
 	logger := log.NewEntry(log.StandardLogger())
 	log.SetFormatter(&log.JSONFormatter{})
 

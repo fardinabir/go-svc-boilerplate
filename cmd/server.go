@@ -31,7 +31,7 @@ var serverCmd = &cobra.Command{
 func runServe(cfg model.Config) error {
 	var servers []server.Server
 
-	apiOpts := server.TxnAPIServerOpts{
+	apiOpts := server.APIServerOpts{
 		ListenPort: cfg.APIServer.Port,
 		Config:     cfg,
 	}
