@@ -3,7 +3,7 @@ package server
 import (
 	"testing"
 
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/config"
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -21,8 +21,8 @@ func TestNewAPI(t *testing.T) {
 			name: "Valid configuration",
 			opts: APIServerOpts{
 				ListenPort: 8082,
-				Config: model.Config{
-					PostgreSQL: model.PostgreSQL{
+				Config: config.Config{
+					PostgreSQL: config.PostgreSQL{
 						Host:     "localhost",
 						Port:     5432,
 						User:     "postgres",
@@ -30,7 +30,7 @@ func TestNewAPI(t *testing.T) {
 						DBName:   "postgres",
 						SSLMode:  "disable",
 					},
-					SwaggerServer: model.Server{
+					SwaggerServer: config.Server{
 						Enable: true,
 						Port:   8082,
 					},
@@ -42,8 +42,8 @@ func TestNewAPI(t *testing.T) {
 			name: "Invalid database configuration",
 			opts: APIServerOpts{
 				ListenPort: 8082,
-				Config: model.Config{
-					PostgreSQL: model.PostgreSQL{
+				Config: config.Config{
+					PostgreSQL: config.PostgreSQL{
 						Host:     "invalid-host",
 						Port:     5432,
 						User:     "invalid-user",
@@ -51,7 +51,7 @@ func TestNewAPI(t *testing.T) {
 						DBName:   "invalid-db",
 						SSLMode:  "disable",
 					},
-					SwaggerServer: model.Server{
+					SwaggerServer: config.Server{
 						Enable: true,
 						Port:   8082,
 					},
@@ -70,10 +70,10 @@ func TestNewAPI(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				assert.NotNil(t, server)
-				assert.Equal(t, tt.opts.ListenPort, server.(*userAPIServer).port)
-				assert.IsType(t, &echo.Echo{}, server.(*userAPIServer).engine)
-				assert.IsType(t, &log.Entry{}, server.(*userAPIServer).log)
-				assert.IsType(t, &gorm.DB{}, server.(*userAPIServer).db)
+				assert.Equal(t, tt.opts.ListenPort, server.(*apiServer).port)
+				assert.IsType(t, &echo.Echo{}, server.(*apiServer).engine)
+				assert.IsType(t, &log.Entry{}, server.(*apiServer).log)
+				assert.IsType(t, &gorm.DB{}, server.(*apiServer).db)
 			}
 		})
 	}

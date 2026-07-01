@@ -32,8 +32,8 @@ migrate-test:
 
 .PHONY: reset-db
 reset-db:
-	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "DROP DATABASE IF EXISTS user;"
-	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE user WITH TEMPLATE = template0 OWNER = postgres ENCODING = 'UTF8';"
+	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "DROP DATABASE IF EXISTS \"user\";"
+	PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE \"user\" WITH TEMPLATE = template0 OWNER = postgres ENCODING = 'UTF8';"
 	make migrate
 
 .PHONY: reset-test-db
@@ -76,8 +76,12 @@ test: reset-test-db
 test-ci: reset-test-db
 	gotestsum --format=testname -- -cover -coverprofile=coverage.out ./...
 
+.PHONY: wire
+wire:
+	cd internal/server && go run github.com/google/wire/cmd/wire
+
 # Go files to check during build
-SWAG_GO_FILES:=$(shell find internal/controller -type f -name '*.go' -print)
+SWAG_GO_FILES:=$(shell find internal pkg -type f -name '*.go' -print)
 
 docs/swagger.yaml: main.go $(SWAG_GO_FILES)
 	swag init

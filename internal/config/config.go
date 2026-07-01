@@ -1,5 +1,5 @@
-// Package model provides the data models for the application.
-package model
+// Package config provides the configuration types for the application.
+package config
 
 // Config is the configuration for the application.
 type Config struct {

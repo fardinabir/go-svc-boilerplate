@@ -4,14 +4,14 @@ package db
 import (
 	"fmt"
 
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 // New creates a new database connection
-func New(cfg model.PostgreSQL) (*gorm.DB, error) {
+func New(cfg config.PostgreSQL) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.SSLMode)
 
@@ -42,7 +42,7 @@ func NewTestDB() (*gorm.DB, error) {
 }
 
 // initTestConfig loads test configuration from config.test.yaml
-func initTestConfig() (*model.Config, error) {
+func initTestConfig() (*config.Config, error) {
 	v := viper.New()
 	v.SetConfigName("config.test")
 	v.SetConfigType("yaml")
@@ -54,7 +54,7 @@ func initTestConfig() (*model.Config, error) {
 		return nil, fmt.Errorf("failed to read test config: %w", err)
 	}
 
-	var cfg model.Config
+	var cfg config.Config
 	if err := v.Unmarshal(&cfg); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal test config: %w", err)
 	}

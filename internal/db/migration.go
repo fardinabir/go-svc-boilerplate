@@ -8,15 +8,18 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/cases"
+	"github.com/fardinabir/go-svc-boilerplate/internal/user"
 	"gorm.io/gorm"
 )
 
 // Migrate runs the complete migration process for the database
 // It performs DDL migrations (schema) followed by DML migrations (data)
 func Migrate(db *gorm.DB) error {
-	// Step 1: Run GORM auto-migration for schema creation
-	if err := db.AutoMigrate(&model.User{}); err != nil {
+	// Step 1: Run GORM auto-migration for schema creation.
+	// This is the one place infra references domain models — each new domain adds
+	// its aggregate here so the schema stays in sync.
+	if err := db.AutoMigrate(&user.User{}, &cases.Case{}); err != nil {
 		fmt.Printf("ERROR: Auto-migration failed: %v\n", err)
 		return fmt.Errorf("failed to run auto-migration: %w", err)
 	}

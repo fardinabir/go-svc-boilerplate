@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/config"
 	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -13,7 +13,7 @@ import (
 
 var (
 	cfgFile string
-	cfg     model.Config
+	cfg     config.Config
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -63,9 +63,9 @@ func initConfig() {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 
-	cfg = model.Config{
-		APIServer:     model.Server{Enable: true, Port: 8082},
-		SwaggerServer: model.Server{Enable: false, Port: 1314},
+	cfg = config.Config{
+		APIServer:     config.Server{Enable: true, Port: 8082},
+		SwaggerServer: config.Server{Enable: false, Port: 1314},
 	}
 
 	err := viper.Unmarshal(&cfg)
