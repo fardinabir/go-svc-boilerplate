@@ -1,4 +1,7 @@
-package model
+// Package user is the user bounded context: it owns the User model and its
+// repository, service, and HTTP handler. It is the reference template every other
+// domain package copies.
+package user
 
 import (
 	"strings"
@@ -8,7 +11,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// User represents a simple user entity for boilerplate CRUD
+// User represents a simple user entity for boilerplate CRUD.
 type User struct {
 	ID        int       `gorm:"primaryKey" json:"id"`
 	Name      string    `gorm:"not null" json:"name"`
@@ -17,7 +20,14 @@ type User struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
-// IsValidUserName is a validator function compatible with go-playground/validator
+// RegisterValidations registers this domain's custom validation tags. The
+// composition root passes it to web.NewCustomValidator, so the web package never
+// needs to import this domain.
+func RegisterValidations(v *validator.Validate) {
+	_ = v.RegisterValidation("validUserName", IsValidUserName)
+}
+
+// IsValidUserName is a validator function compatible with go-playground/validator.
 func IsValidUserName(fl validator.FieldLevel) bool {
 	if fl.Field().IsZero() {
 		return true

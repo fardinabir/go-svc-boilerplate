@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
+	"github.com/fardinabir/go-svc-boilerplate/internal/config"
 	"github.com/fardinabir/go-svc-boilerplate/internal/server"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ var serverCmd = &cobra.Command{
 	},
 }
 
-func runServe(cfg model.Config) error {
+func runServe(cfg config.Config) error {
 	var servers []server.Server
 
 	apiOpts := server.APIServerOpts{

@@ -1,4 +1,4 @@
-package controller
+package user_test
 
 import (
 	"bytes"
@@ -6,26 +6,27 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	db2 "github.com/fardinabir/go-svc-boilerplate/internal/db"
-	"github.com/fardinabir/go-svc-boilerplate/internal/model"
-	"github.com/fardinabir/go-svc-boilerplate/internal/repository"
-	"github.com/fardinabir/go-svc-boilerplate/internal/service"
+	"github.com/fardinabir/go-svc-boilerplate/internal/db"
+	"github.com/fardinabir/go-svc-boilerplate/internal/user"
+	"github.com/fardinabir/go-svc-boilerplate/pkg/web"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
 
+func newUserHandler(t *testing.T) (user.Handler, *gorm.DB) {
+	t.Helper()
+	dbInstance, err := db.NewTestDB()
+	require.NoError(t, err)
+	require.NoError(t, db.Migrate(dbInstance))
+	return user.NewHandler(user.NewService(user.NewRepository(dbInstance))), dbInstance
+}
+
 func TestUserHandler_CreateUser(t *testing.T) {
 	e := echo.New()
-	e.Validator = NewCustomValidator()
-	dbInstance, err := db2.NewTestDB()
-	require.NoError(t, err)
-	err = db2.Migrate(dbInstance)
-	require.NoError(t, err)
-	repository := repository.NewUserRepository(dbInstance)
-	service := service.NewUserService(repository)
-	handler := NewUserHandler(service)
+	e.Validator = web.NewCustomValidator(user.RegisterValidations)
+	handler, dbInstance := newUserHandler(t)
 
 	tests := []struct {
 		name       string
@@ -39,7 +40,7 @@ func TestUserHandler_CreateUser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			clearDB(dbInstance, model.User{})
+			clearDB(dbInstance, user.User{})
 			req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader([]byte(tt.createBody)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -54,14 +55,9 @@ func TestUserHandler_CreateUser(t *testing.T) {
 
 func TestUserHandler_ListAndGetUser(t *testing.T) {
 	e := echo.New()
-	e.Validator = NewCustomValidator()
-	dbInstance, err := db2.NewTestDB()
-	require.NoError(t, err)
-	err = db2.Migrate(dbInstance)
-	require.NoError(t, err)
-	repository := repository.NewUserRepository(dbInstance)
-	service := service.NewUserService(repository)
-	handler := NewUserHandler(service)
+	e.Validator = web.NewCustomValidator(user.RegisterValidations)
+	handler, dbInstance := newUserHandler(t)
+	clearDB(dbInstance, user.User{})
 
 	// Initially empty list
 	{
@@ -107,9 +103,9 @@ func TestUserHandler_ListAndGetUser(t *testing.T) {
 	}
 }
 
-// Helpers
-func clearDB(db *gorm.DB, models ...interface{}) {
-	for _, model := range models {
-		db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(model)
+// clearDB truncates the given models between test cases.
+func clearDB(dbInstance *gorm.DB, models ...interface{}) {
+	for _, m := range models {
+		dbInstance.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(m)
 	}
 }

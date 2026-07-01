@@ -1,4 +1,4 @@
-package controller
+package health
 
 import (
 	"net/http"
@@ -16,7 +16,7 @@ func TestHealth(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	h := NewHealth()
+	h := New()
 
 	err := h.Health(c)
 	require.NoError(t, err)
