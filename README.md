@@ -82,70 +82,43 @@ For a complete walkthrough of adding domains, declaring ports, and Wire DI inter
 │   └── root.go               # CLI wiring, config loading (Cobra + Viper)
 │
 ├── internal/
-│   │
-│   ├── user/                 # Domain: user management
-│   │   ├── model.go          # User GORM struct + custom validators
+│   ├── <domain>/             # One folder per business domain
+│   │   ├── model.go          # GORM struct + domain validators
 │   │   ├── repository.go     # Repository interface + GORM implementation
 │   │   ├── service.go        # Service interface + business logic
-│   │   ├── handler.go        # Echo handlers; embeds pkg/web.Base
+│   │   ├── handler.go        # Echo handlers
 │   │   ├── routes.go         # RegisterRoutes(g *echo.Group, h Handler)
-│   │   ├── wire_providers.go # var ProviderSet = wire.NewSet(...)
-│   │   └── user_test.go      # Integration tests against a real test DB
-│   │
-│   ├── cases/                # Domain: case management (cross-domain example)
-│   │   ├── model.go          # Case GORM struct
-│   │   ├── repository.go     # Repository interface + GORM implementation
-│   │   ├── service.go        # Service interface + business logic
-│   │   ├── handler.go        # Echo handlers; embeds pkg/web.Base
-│   │   ├── routes.go         # RegisterRoutes(g *echo.Group, h Handler)
-│   │   ├── ports.go          # UserReader port (cross-domain read interface)
-│   │   ├── wire_providers.go # var ProviderSet = wire.NewSet(...)
-│   │   └── cases_test.go     # Integration tests
-│   │
-│   ├── health/               # System health endpoint
-│   │   └── health.go
+│   │   ├── wire.go           # var ProviderSet = wire.NewSet(...)
+│   │   ├── errors.go         # Domain-specific typed error vars
+│   │   ├── ports.go          # Cross-domain port interfaces (if needed)
+│   │   └── *_test.go         # Integration tests
 │   │
 │   ├── server/               # Composition root — wires and serves all domains
-│   │   ├── api.go            # Build Echo engine, register middleware, mount routes
-│   │   ├── server.go         # Server lifecycle (start, graceful shutdown)
+│   │   ├── api.go            # Echo engine, middleware, route mounting
 │   │   ├── wire.go           # Wire injector declaration (wireinject build tag)
-│   │   ├── wire_gen.go       # Wire-generated wiring — do not edit manually
-│   │   ├── log.go            # Request logger middleware
-│   │   ├── swagger_server.go # Optional Swagger UI server
-│   │   └── *_test.go         # Server-level and route-registration tests
+│   │   └── wire_gen.go       # Wire-generated code — do not edit manually
 │   │
-│   ├── db/
-│   │   ├── db.go             # Connect, auto-migrate models, test DB provisioning
-│   │   └── migration.go      # Apply versioned SQL migrations (DDL + DML)
-│   │
-│   ├── config/
-│   │   └── config.go         # Config struct; loaded by Cobra/Viper at startup
-│   │
-│   └── errors/
-│       └── codes.go          # Typed error codes (NOT_FOUND, BAD_REQUEST, ...)
+│   ├── db/                   # DB connection, AutoMigrate, SQL migration runner
+│   ├── config/               # Config struct (loaded by Viper at startup)
+│   ├── errors/               # Shared typed error codes (AppError)
+│   └── health/               # Health check endpoint
 │
 ├── pkg/                      # Reusable, business-agnostic plumbing
-│   ├── web/
-│   │   ├── bind.go           # Base struct + MustBind (bind + validate in one call)
-│   │   └── validator.go      # Echo validator wiring; domains supply custom tags via RegisterValidations
-│   ├── response/
-│   │   ├── response.go       # Generic ResponseData / ResponseError envelopes
-│   │   └── error.go          # Error response helpers
-│   └── logger/
-│       └── logger.go         # Logrus entry initialization
+│   ├── web/                  # Echo base handler, request binding + validation
+│   ├── response/             # HTTP response helpers and envelope types
+│   └── logger/               # Logrus initialization
 │
 ├── migrations/
-│   ├── ddl/                  # Schema migrations (CREATE TABLE, ALTER, ...)
-│   └── dml/                  # Data migrations (seed rows, reference data, ...)
+│   ├── ddl/                  # Schema migrations (ALTER, constraints, indexes)
+│   └── dml/                  # Data migrations (seed rows, reference data)
 │
-├── docs/                     # Generated Swagger spec and HTML (via make swagger)
-├── main.go                   # Binary entrypoint → Cobra CLI
-├── tools.go                  # Tool dependencies (wire, swag) pinned for go mod
+├── docs/                     # Generated Swagger spec (via make swagger)
 ├── config.yaml               # Runtime configuration
-├── config.test.yaml          # Test configuration (uses a separate test DB)
-├── docker-compose.yml        # Local Postgres
-└── Makefile                  # Developer commands
+├── config.test.yaml          # Test configuration (separate test DB)
+└── docker-compose.yml        # Local Postgres
 ```
+
+
 
 
 ## Sequence Diagram
