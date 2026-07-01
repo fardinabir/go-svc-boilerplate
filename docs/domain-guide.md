@@ -69,7 +69,9 @@ package billing
 
 import (
     "net/http"
-    "github.com/fardinabir/go-svc-boilerplate/internal/errors"
+
+    apierr "github.com/fardinabir/go-svc-boilerplate/internal/errors"
+    "github.com/fardinabir/go-svc-boilerplate/pkg/response"
     "github.com/fardinabir/go-svc-boilerplate/pkg/web"
     "github.com/labstack/echo/v4"
 )
@@ -89,12 +91,12 @@ func NewHandler(s Service) Handler { return &handler{service: s} }
 func (h *handler) CreateInvoice(c echo.Context) error {
     var inv Invoice
     if err := h.MustBind(c, &inv); err != nil {
-        return h.Error(c, net.http.StatusBadRequest, errors.CodeBadRequest, err.Error())
+        return response.Respond(c, apierr.ErrBadRequest, err.Error())
     }
     if err := h.service.CreateInvoice(&inv); err != nil {
-        return h.Error(c, http.StatusInternalServerError, errors.CodeInternalServerError, err.Error())
+        return response.Respond(c, apierr.ErrInternalServerError)
     }
-    return h.OK(c, inv)
+    return c.JSON(http.StatusCreated, response.ResponseData{Data: inv})
 }
 ```
 
@@ -157,12 +159,21 @@ type Handlers struct {
 }
 ```
 
-### 5. Mount the routes
+### 5. Mount the routes and register validators
 
 In `setupRoutes` in `internal/server/api.go`:
 
 ```go
 billing.RegisterRoutes(api, h.Billing)    // ← add
+```
+
+If the domain defines custom validation tags via a `RegisterValidations` function, also append it to the validator setup in the same file:
+
+```go
+e.Validator = web.NewCustomValidator(
+    user.RegisterValidations,
+    billing.RegisterValidations,    // ← add if domain has custom tags
+)
 ```
 
 ### 6. Regenerate Wire and add a migration

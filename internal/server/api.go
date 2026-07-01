@@ -70,8 +70,12 @@ func NewAPI(opts APIServerOpts) (Server, error) {
 // Adding a domain is two lines here: add its ProviderSet to InitializeHandlers (wire.go)
 // and a RegisterRoutes call below.
 func (s *apiServer) setupRoutes(e *echo.Echo) error {
-	// Each domain contributes its own custom validation tags.
-	e.Validator = web.NewCustomValidator(user.RegisterValidations)
+	// Each domain that registers custom validation tags must be listed here.
+	// When adding a new domain with custom tags, append its RegisterValidations fn.
+	e.Validator = web.NewCustomValidator(
+		user.RegisterValidations,
+		// cases.RegisterValidations,  // add when cases defines custom tags
+	)
 
 	handlers, err := InitializeHandlers(s.db)
 	if err != nil {
