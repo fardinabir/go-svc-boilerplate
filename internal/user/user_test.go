@@ -40,7 +40,7 @@ func TestUserHandler_CreateUser(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			clearDB(dbInstance, user.User{})
+			clearTables(dbInstance, "cases", "users")
 			req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewReader([]byte(tt.createBody)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -57,7 +57,7 @@ func TestUserHandler_ListAndGetUser(t *testing.T) {
 	e := echo.New()
 	e.Validator = web.NewCustomValidator(user.RegisterValidations)
 	handler, dbInstance := newUserHandler(t)
-	clearDB(dbInstance, user.User{})
+	clearTables(dbInstance, "cases", "users")
 
 	// Initially empty list
 	{
@@ -103,9 +103,10 @@ func TestUserHandler_ListAndGetUser(t *testing.T) {
 	}
 }
 
-// clearDB truncates the given models between test cases.
-func clearDB(dbInstance *gorm.DB, models ...interface{}) {
-	for _, m := range models {
-		dbInstance.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(m)
+// clearTables deletes rows from tables in the given order.
+// Caller must list FK children before parents (e.g. "cases" before "users").
+func clearTables(dbInstance *gorm.DB, tables ...string) {
+	for _, t := range tables {
+		dbInstance.Exec(`DELETE FROM "` + t + `"`)
 	}
 }

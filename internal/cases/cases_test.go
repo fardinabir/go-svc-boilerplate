@@ -34,7 +34,7 @@ func TestCaseHandler_CreateListGet(t *testing.T) {
 	e := echo.New()
 	e.Validator = web.NewCustomValidator()
 	handler, dbInstance := newCasesHandler(t)
-	clearDB(dbInstance, cases.Case{})
+	clearTables(dbInstance, "cases")
 
 	// Create
 	{
@@ -71,8 +71,10 @@ func TestCaseHandler_CreateListGet(t *testing.T) {
 	}
 }
 
-func clearDB(dbInstance *gorm.DB, models ...interface{}) {
-	for _, m := range models {
-		dbInstance.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(m)
+// clearTables deletes rows from tables in the given order.
+// Caller must list FK children before parents (e.g. "cases" before "users").
+func clearTables(dbInstance *gorm.DB, tables ...string) {
+	for _, t := range tables {
+		dbInstance.Exec(`DELETE FROM "` + t + `"`)
 	}
 }
